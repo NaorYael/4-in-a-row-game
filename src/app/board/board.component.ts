@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService, Cell } from '../game.service';
 import {
@@ -11,35 +11,35 @@ import {
 
 @Component({
   selector: 'app-board',
-  standalone: true,
+  standalone: true, 
   imports: [CommonModule],
   template: `
-    <div class="container">
-      <div class="game-info">
-        <h1>4 in a Row</h1>
+<div class="container">
+    <div class="game-info">
+      <h1>4 in a Row</h1>
         <div class="current-player" *ngIf="!winner" [@fadeInOut]>
           Current Player: <span [style.color]="currentPlayer === 'red' ? '#f44336' : '#ffd700'">{{currentPlayer}}</span>
         </div>
-        <div class="winner-announcement" *ngIf="winner" [@bounceIn]>
+      <div class="winner-announcement" *ngIf="winner" [@bounceIn]>
           Winner: {{winner}}!
         </div>
+    </div>
+    <div class="board">
+      <div class="board-row" *ngFor="let row of board; let i = index">
+        <div
+          *ngFor="let cell of row; let j = index"
+          class="cell"
+          [class.red]="cell === 'red'"
+          [class.yellow]="cell === 'yellow'"
+[class.animated]="isNewMove(i, j)"
+          (click)="makeMove(i, j)"
+[@cellState]="cell || 'empty'"
+        ></div>
       </div>
-      <div class="board">
-        <div class="board-row" *ngFor="let row of board; let i = index">
-          <div
-            *ngFor="let cell of row; let j = index"
-            class="cell"
-            [class.red]="cell === 'red'"
-            [class.yellow]="cell === 'yellow'"
-            [class.animated]="isNewMove(i, j)"
-            (click)="makeMove(i, j)"
-            [@cellState]="cell || 'empty'"
-          ></div>
-        </div>
-      </div>
+</div>
       <button class="reset-button" (click)="resetGame()" [@buttonPop]>Reset Game</button>
     </div>
-  `,
+    `,
   animations: [
     trigger('cellState', [
       state(
@@ -115,7 +115,7 @@ export class BoardComponent {
   }
 
   resetGame(): void {
-    this.lastMove = null;
+this.lastMove = null;
     this.gameService.initializeBoard();
   }
 
